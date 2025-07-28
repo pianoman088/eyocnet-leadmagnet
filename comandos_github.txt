@@ -1,0 +1,27 @@
+# COMANDOS PARA EJECUTAR DESPUÉS DE CREAR EL REPOSITORIO EN GITHUB
+
+# 1. Configurar el repositorio remoto (REEMPLAZA TU_USUARIO por tu nombre de usuario de GitHub)
+git remote add origin https://github.com/TU_USUARIO/eyocnet-leadmagnet.git
+
+# 2. Cambiar a rama main (GitHub usa main por defecto ahora)
+git branch -M main
+
+# 3. Subir los archivos a GitHub
+git push -u origin main
+
+# EJEMPLO si tu usuario es "ramqu":
+# git remote add origin https://github.com/ramqu/eyocnet-leadmagnet.git
+# git branch -M main  
+# git push -u origin main
+
+# DESPUÉS DE SUBIR:
+# 1. Ve a tu repositorio en GitHub
+# 2. Click en "Settings" (arriba derecha)
+# 3. Scroll hasta "Pages" (menú izquierdo)
+# 4. Source: "Deploy from a branch"
+# 5. Branch: "main" + folder: "/ (root)"
+# 6. Click "Save"
+# 7. Espera 1-2 minutos
+# 8. Tu URL será: https://TU_USUARIO.github.io/eyocnet-leadmagnet/
+
+# ¡Tu lead magnet estará disponible en internet!
