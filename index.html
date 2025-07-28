@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏗️ Calculadora de Impacto Profesional AECO - EyOCnet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .calculator-section {
+            background: #f8f9ff;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e1e5ff;
+        }
+
+        .results-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .results-section .section-title {
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="text"] {
+            background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+        }
+
+        input[type="text"]:focus {
+            background: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .impact-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .impact-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .impact-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid #667eea;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .benefit-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .benefit-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .benefit-description {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #ffd700;
+            color: #2c3e50;
+            padding: 18px 40px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 20px 10px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            background: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .cta-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .testimonials {
+            background: #f8f9ff;
+            padding: 40px;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: """;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 4em;
+            color: #667eea;
+            opacity: 0.3;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .animated-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #ffd700;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1>🏗️ Calculadora de Impacto Profesional AECO</h1>
+                <div class="subtitle">Descubre el ROI real de ser socio de EyOCnet para tu carrera docente</div>
+                <div style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
+                    ⚡ Herramienta interactiva exclusiva para profesores de Formación Profesional
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Calculator Section -->
+            <div class="calculator-section">
+                <h2 class="section-title">
+                    🎯 <span>Perfil Profesional</span>
+                </h2>
+                
+                <div class="form-group">
+                    <label for="experience">Años de experiencia docente en FP AECO:</label>
+                    <select id="experience" onchange="calculateImpact()">
+                        <option value="1-3">1-3 años (Profesor novel)</option>
+                        <option value="4-8" selected>4-8 años (Experiencia consolidada)</option>
+                        <option value="9-15">9-15 años (Profesor senior)</option>
+                        <option value="16+">+16 años (Veterano/experto)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="centerType">Tipo de centro educativo:</label>
+                    <select id="centerType" onchange="calculateImpact()">
+                        <option value="publico" selected>FP Pública</option>
+                        <option value="privado">FP Privada</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="centerName">Nombre de tu centro educativo:</label>
+                    <input type="text" id="centerName" placeholder="Ej: IES Arquitectura y Construcción Madrid" onchange="calculateImpact()" style="font-size: 16px;">
+                </div>
+
+                <div class="form-group">
+                    <label for="ambition">Nivel de ambición profesional:</label>
+                    <div class="slider-container">
+                        <input type="range" id="ambition" class="slider" min="1" max="10" value="7" onchange="calculateImpact(); updateAmbitionLabel()">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #666;">
+                            <span>Estabilidad</span>
+                            <span id="ambitionLabel">Alto crecimiento</span>
+                            <span>Liderazgo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="networkSize">Tamaño actual de tu red profesional AECO:</label>
+                    <select id="networkSize" onchange="calculateImpact()">
+                        <option value="pequena">Pequeña (0-20 contactos)</option>
+                        <option value="media" selected>Media (21-50 contactos)</option>
+                        <option value="grande">Grande (51-100 contactos)</option>
+                        <option value="extensa">Extensa (+100 contactos)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="updateNeed">¿Cuánto necesitas actualización técnica?</label>
+                    <div class="slider-container">
+                        <input type="range" id="updateNeed" class="slider" min="1" max="10" value="6" onchange="calculateImpact(); updateNeedLabel()">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #666;">
+                            <span>Al día</span>
+                            <span id="updateNeedLabel">Necesito actualización</span>
+                            <span>Urgente</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <h2 class="section-title">
+                    📊 <span>Tu Impacto Potencial</span>
+                </h2>
+
+                <div class="impact-card pulse">
+                    <div class="impact-value" id="roiValue">847%</div>
+                    <div class="impact-label">ROI anual de tu inversión en EyOCnet</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="roiProgress" style="width: 85%"></div>
+                    </div>
+                </div>
+
+                <div class="impact-card">
+                    <div class="impact-value" id="networkGrowth">+73</div>
+                    <div class="impact-label">Nuevos contactos profesionales estimados</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="networkProgress" style="width: 73%"></div>
+                    </div>
+                </div>
+
+                <div class="impact-card">
+                    <div class="impact-value" id="opportunityScore">9.2/10</div>
+                    <div class="impact-label">Puntuación de oportunidades de crecimiento</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="opportunityProgress" style="width: 92%"></div>
+                    </div>
+                </div>
+
+                <div class="impact-card">
+                    <div class="impact-value" id="timeToROI">2.3</div>
+                    <div class="impact-label">Meses para recuperar la inversión</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="timeProgress" style="width: 77%"></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; font-size: 0.9em;">
+                    <strong>💡 Recomendación personalizada:</strong>
+                    <div id="personalRecommendation">
+                        Con tu perfil, EyOCnet te aportará máximo valor en networking y actualización técnica. ¡El momento perfecto para unirte!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits Grid -->
+        <div class="benefits-grid" style="padding: 0 40px;">
+            <div class="benefit-card floating">
+                <div class="benefit-icon">🤝</div>
+                <div class="benefit-title">Red Profesional</div>
+                <div class="benefit-description">Conecta con +500 profesores FP AECO de toda España</div>
+            </div>
+            <div class="benefit-card floating" style="animation-delay: 0.2s;">
+                <div class="benefit-icon">📚</div>
+                <div class="benefit-title">Formación Continua</div>
+                <div class="benefit-description">Acceso a congresos, webinars y recursos actualizados</div>
+            </div>
+            <div class="benefit-card floating" style="animation-delay: 0.4s;">
+                <div class="benefit-icon">💡</div>
+                <div class="benefit-title">Innovación Pedagógica</div>
+                <div class="benefit-description">Metodologías activas y casos de éxito probados</div>
+            </div>
+            <div class="benefit-card floating" style="animation-delay: 0.6s;">
+                <div class="benefit-icon">🎯</div>
+                <div class="benefit-title">Empleabilidad</div>
+                <div class="benefit-description">Mejora la inserción laboral de tus estudiantes</div>
+            </div>
+        </div>
+
+        <!-- Testimonials -->
+        <div class="testimonials">
+            <h2 style="text-align: center; margin-bottom: 30px; color: #2c3e50;">
+                💬 Lo que dicen nuestros socios
+            </h2>
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "Desde que me uní a EyOCnet, he multiplicado mis contactos profesionales por 3 y mis alumnos tienen un 40% más de empleabilidad. La inversión de 30€ se recupera en el primer mes."
+                </div>
+                <div class="testimonial-author">
+                    - María González, Profesora FP Edificación, IES Politécnico Las Palmas
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "La red de profesores de FP privada en EyOCnet me ha abierto oportunidades increíbles. Los recursos compartidos han modernizado completamente mis clases y ahora soy coordinadora del departamento."
+                </div>
+                <div class="testimonial-author">
+                    - Ana Martín, Coordinadora AECO, Centro San Patricio Málaga
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2 style="margin-bottom: 20px;">🚀 ¡Tu momento es AHORA!</h2>
+            <p style="font-size: 1.1em; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Solo <strong>30€/año</strong> - menos que una cena - para multiplicar tu impacto profesional y el éxito de tus estudiantes
+            </p>
+            
+            <a href="https://www.eyocnet.org/as%C3%B3ciate" target="_blank" class="cta-button">
+                🎯 HACERME SOCIO AHORA
+            </a>
+            
+            <a href="https://forms.gle/9coJsVXtPVM27tEfA" target="_blank" class="cta-button">
+                📝 FORMULARIO DIRECTO
+            </a>
+            
+            <div style="margin-top: 30px; font-size: 0.9em; opacity: 0.9;">
+                ✅ Proceso simple: Transferencia + Formulario<br>
+                ✅ Beneficios inmediatos desde el día 1<br>
+                ✅ Comunidad activa de profesores AECO
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateImpact() {
+            const experience = document.getElementById('experience').value;
+            const centerType = document.getElementById('centerType').value;
+            const centerName = document.getElementById('centerName').value;
+            const ambition = parseInt(document.getElementById('ambition').value);
+            const networkSize = document.getElementById('networkSize').value;
+            const updateNeed = parseInt(document.getElementById('updateNeed').value);
+
+            // Base calculations
+            let baseROI = 450;
+            let baseNetwork = 42;
+            let baseOpportunity = 7.2;
+            let baseTime = 3.5;
+
+            // Experience multipliers
+            const expMultipliers = {
+                '1-3': { roi: 1.5, network: 1.7, opportunity: 1.4, time: 0.7 },
+                '4-8': { roi: 1.3, network: 1.4, opportunity: 1.3, time: 0.8 },
+                '9-15': { roi: 1.0, network: 1.0, opportunity: 1.0, time: 1.0 },
+                '16+': { roi: 0.8, network: 0.8, opportunity: 0.9, time: 1.3 }
+            };
+
+            // Center type multipliers (simplified to public/private)
+            const centerMultipliers = {
+                'publico': { roi: 1.0, network: 1.0, opportunity: 1.0, time: 1.0 },
+                'privado': { roi: 1.4, network: 1.3, opportunity: 1.3, time: 0.7 }
+            };
+
+            // Network size multipliers
+            const networkMultipliers = {
+                'pequena': { roi: 1.9, network: 2.1, opportunity: 1.7, time: 0.5 },
+                'media': { roi: 1.4, network: 1.6, opportunity: 1.3, time: 0.7 },
+                'grande': { roi: 1.0, network: 1.0, opportunity: 1.0, time: 1.0 },
+                'extensa': { roi: 0.7, network: 0.6, opportunity: 0.8, time: 1.4 }
+            };
+
+            // Apply multipliers
+            const expMult = expMultipliers[experience];
+            const centerMult = centerMultipliers[centerType];
+            const netMult = networkMultipliers[networkSize];
+
+            // Ambition and update need factors
+            const ambitionFactor = ambition / 10;
+            const updateFactor = updateNeed / 10;
+
+            // Center name bonus (if filled, shows engagement)
+            const centerNameBonus = centerName.trim().length > 0 ? 1.1 : 1.0;
+
+            // Calculate final values
+            const finalROI = Math.round(baseROI * expMult.roi * centerMult.roi * netMult.roi * centerNameBonus * (1 + ambitionFactor * 0.6) * (1 + updateFactor * 0.4));
+            const finalNetwork = Math.round(baseNetwork * expMult.network * centerMult.network * netMult.network * centerNameBonus * (1 + ambitionFactor * 0.5));
+            const finalOpportunity = Math.min(10, (baseOpportunity * expMult.opportunity * centerMult.opportunity * netMult.opportunity * centerNameBonus * (1 + ambitionFactor * 0.3) * (1 + updateFactor * 0.2)).toFixed(1));
+            const finalTime = Math.max(0.5, (baseTime * expMult.time * centerMult.time * netMult.time / centerNameBonus / (1 + ambitionFactor * 0.4) / (1 + updateFactor * 0.3)).toFixed(1));
+
+            // Update display
+            document.getElementById('roiValue').textContent = finalROI + '%';
+            document.getElementById('networkGrowth').textContent = '+' + finalNetwork;
+            document.getElementById('opportunityScore').textContent = finalOpportunity + '/10';
+            document.getElementById('timeToROI').textContent = finalTime;
+
+            // Update progress bars
+            document.getElementById('roiProgress').style.width = Math.min(100, finalROI / 12) + '%';
+            document.getElementById('networkProgress').style.width = Math.min(100, finalNetwork * 1.2) + '%';
+            document.getElementById('opportunityProgress').style.width = (finalOpportunity * 10) + '%';
+            document.getElementById('timeProgress').style.width = Math.max(10, 100 - (finalTime * 12)) + '%';
+
+            // Update recommendation
+            updateRecommendation(experience, centerType, ambition, updateNeed, finalROI, centerName);
+        }
+
+        function updateRecommendation(experience, centerType, ambition, updateNeed, roi, centerName) {
+            let recommendation = "";
+            
+            if (roi > 900) {
+                recommendation = "¡EXTRAORDINARIO! Tu perfil es absolutamente ideal para EyOCnet. El ROI proyectado es excepcional.";
+            } else if (roi > 700) {
+                recommendation = "¡PERFECTO! EyOCnet multiplicará significativamente tu impacto profesional.";
+            } else if (roi > 500) {
+                recommendation = "Excelente oportunidad. Los beneficios superarán claramente la inversión.";
+            } else if (roi > 350) {
+                recommendation = "Buena inversión que te aportará valor profesional constante.";
+            } else {
+                recommendation = "Inversión sólida con beneficios a medio-largo plazo.";
+            }
+
+            if (centerType === 'privado') {
+                recommendation += " En FP privada, la red de EyOCnet te dará ventaja competitiva clara.";
+            } else {
+                recommendation += " La red de profesores de FP pública en EyOCnet es muy activa y colaborativa.";
+            }
+
+            if (ambition >= 8) {
+                recommendation += " Tu alta ambición profesional encaja perfectamente con nuestra comunidad.";
+            }
+
+            if (updateNeed >= 7) {
+                recommendation += " Nuestros recursos de actualización resolverán tus necesidades inmediatas.";
+            }
+
+            if (centerName.trim().length > 0) {
+                recommendation += " Conectarás con profesores de centros similares al tuyo.";
+            }
+
+            document.getElementById('personalRecommendation').textContent = recommendation;
+        }
+
+        function updateAmbitionLabel() {
+            const value = document.getElementById('ambition').value;
+            const labels = {
+                1: "Estabilidad total", 2: "Estabilidad", 3: "Estabilidad+", 
+                4: "Equilibrio", 5: "Crecimiento moderado", 6: "Crecimiento",
+                7: "Alto crecimiento", 8: "Ambición alta", 9: "Liderazgo",
+                10: "Máximo liderazgo"
+            };
+            document.getElementById('ambitionLabel').textContent = labels[value];
+        }
+
+        function updateNeedLabel() {
+            const value = document.getElementById('updateNeed').value;
+            const labels = {
+                1: "Muy al día", 2: "Al día", 3: "Algo desactualizado",
+                4: "Necesito updates", 5: "Bastante desactualizado", 6: "Necesito actualización",
+                7: "Muy desactualizado", 8: "Actualización urgente", 9: "Crítico",
+                10: "Emergencia formativa"
+            };
+            document.getElementById('updateNeedLabel').textContent = labels[value];
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateImpact();
+            updateAmbitionLabel();
+            updateNeedLabel();
+        });
+
+        // Add some interactive animations
+        document.querySelectorAll('.benefit-card').forEach((card, index) => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) rotate(2deg)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) rotate(0)';
+            });
+        });
+    </script>
+</body>
+</html>
